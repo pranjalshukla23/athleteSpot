@@ -38,7 +38,7 @@ export default function Athletes() {
             </div>
             <div className="font-medium text-lg text-gray-800 w-3/4">
               Many talented athletes struggle to get noticed by clubs and
-              coaches, especially if they don't have access to extensive
+              coaches, especially if they don&apos;t have access to extensive
               networks. AthleteSpot addresses this by providing a global
               platform for talents to showcase their abilities.
             </div>

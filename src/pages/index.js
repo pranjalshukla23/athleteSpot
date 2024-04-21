@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
 import Link from "next/link";
 
 export default function Home() {
@@ -20,10 +19,11 @@ export default function Home() {
 
           {/* CTAS */}
           <div className=" flex gap-8 items-center mt-8">
-            <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-yellow-500">
+        
+            <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500">
               Become a Talent
             </button>
-            <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-yellow-500">
+            <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500">
               Become a Recruiter
             </button>
           </div>
@@ -67,7 +67,7 @@ export default function Home() {
               nurturing the next generation of sports superstars.
             </div>
             <Link href="/athletes/info">
-              <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-yellow-500 w-40 cursor-pointer">
+              <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-40 cursor-pointer">
                 Learn More
               </button>
             </Link>
@@ -103,7 +103,7 @@ export default function Home() {
               growth and recognition of diverse athletic pursuits
             </div>
             <Link href="/clubs/info">
-              <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-yellow-500 w-40 cursor-pointer">
+              <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-40 cursor-pointer">
                 Learn More
               </button>
             </Link>

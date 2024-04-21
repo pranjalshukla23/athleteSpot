@@ -15,28 +15,24 @@ export default function Document() {
                 <Link href="/">Home</Link>
               </div>
               <div className="cursor-pointer hover:text-black">
-              <Link href="/about-us">About Us</Link>
+                <Link href="/about-us">About Us</Link>
               </div>
             </div>
           </div>
           <div className=" flex gap-8 items-center">
             <div className="flex gap-2 items-center">
-              <Image
-                src="/assets/icons/mail.svg"
-                width={20}
-                height={20}
-                alt="call"
-              />
-              <div className="font-bold">Queries</div>
+              <Link href="/login/athlete">
+                <div className="font-bold p-2 px-4 bg-black text-white rounded-full cursor-pointer hover:bg-orange-500">
+                  Login as Athlete
+                </div>
+              </Link>
             </div>
             <div className="flex gap-2 items-center">
-              <Image
-                src="/assets/icons/call.svg"
-                width={20}
-                height={20}
-                alt="call"
-              />
-              <div className="font-bold">662464803 </div>
+            <Link href="/login/club">
+              <div className="font-bold p-2 px-4 bg-black text-white rounded-full cursor-pointer hover:bg-orange-500">
+                Login as Club
+              </div>
+              </Link>
             </div>
           </div>
         </nav>

@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function clubs() {
   return (
     <div className="mt-6 flex flex-col justify-center items-center w-full gap-4">
-      <Image src="/images/logo.png" width={200} height={200} alt="logo" />
+      {/* <Image src="/images/logo.png" width={200} height={200} alt="logo" /> */}
       <div className=" flex gap-4 p-4 justify-center min-h-96 w-full">
         <div className="bg-slate-50 shadow-xl p-6 w-1/3">
           <div className="flex items-center gap-2">

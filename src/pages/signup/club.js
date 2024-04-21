@@ -15,28 +15,28 @@ export default function Club() {
           </div>
           <div className="flex flex-col gap-4 mt-8">
           <div>
-              <div>Club Name:</div>
+              <div>Club Name</div>
               <input
                 type="text"
                 className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
               />
             </div>
             <div>
-              <div>Email:</div>
+              <div>Email</div>
               <input
                 type="email"
                 className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
               />
             </div>
             <div>
-              <div>Password:</div>
+              <div>Password</div>
               <input
                 type="password"
                 className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
               />
             </div>
             <div>
-              <div>Confirm Password:</div>
+              <div>Confirm Password</div>
               <input
                 type="password"
                 className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"

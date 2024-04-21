@@ -36,7 +36,7 @@ export default function clubs() {
               </Link>
               <div>
                 <div className="flex gap-2">
-                  <div className="text-gray-500">Don't have an account?</div>
+                  <div className="text-gray-500">Don&apos;t have an account?</div>
                   <Link
                     className="text-blue-500 hover:text-blue-800"
                     href="/signup/club"

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 export default function NavBar() {
   const router = useRouter();
@@ -29,9 +30,14 @@ export default function NavBar() {
         <div
           className="rounded-full w-8 h-8 border-2 border-black flex justify-center items-center cursor-pointer hover:bg-slate-200"
           onClick={() => {
-            const role = localStorage.getItem("user_role");
-            console.log(role);
-            router.push(`/profile/${role === "athlete" ? "athlete" : "club"}`);
+            const token = localStorage.getItem("token");
+            const user = jwtDecode(token);
+            console.log("decoded", user);
+            router.push(
+              `/profile/${user.role}/${
+                user.role === "club" ? user.club_id : user.athlete_id
+              }`
+            );
           }}
         >
           <FaRegUser />

@@ -1,10 +1,82 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineModeEditOutline } from "react-icons/md";
+import { useRouter } from "next/router";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { jwtDecode } from "jwt-decode";
 
-export default function Athlete() {
+export default function Club() {
+  const router = useRouter();
+  const club_id = router.query.id;
   const [isEdit, setIsEdit] = useState(false);
+  const [clubName, setClubName] = useState("");
+  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
+  const [clubType, setClubType] = useState("");
+  const [achivements, setAchivements] = useState("");
+
+  const getClubData = async () => {
+    try {
+      if (club_id) {
+        const { data } = await axios.get(
+          `${
+            process.env.NEXT_PUBLIC_BACKEND_URL
+          }/profile/club/${club_id.toString()}`
+        );
+
+        const clubToken = localStorage.getItem("token");
+
+        const user = jwtDecode(clubToken);
+
+        if (data) {
+          setClubName(data["club_name"]);
+          setClubType(data.club_type ? data.club_type : "--");
+          setDescription(data.description ? data.description : "--");
+          setAchivements(data.achievements ? data.achievements : "--");
+          setEmail(user.sub);
+        }
+      }
+    } catch (err) {
+      console.log("error is", err);
+      toast.error(err.message, {
+        position: "top-right",
+      });
+    }
+  };
+
+  const storeClubData = async () => {
+    try {
+      if (club_id) {
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile/club`,
+          {
+            club_id: club_id.toString(),
+            club_name: clubName,
+            club_type: clubType,
+            description: description,
+            achievements: achivements.split(","),
+          }
+        );
+
+        toast.success(data.message, {
+          position: "top-right",
+        });
+        setIsEdit(false);
+      }
+    } catch (err) {
+      await getClubData();
+      toast.error(err.message, {
+        position: "top-right",
+      });
+    }
+  };
+
+  useEffect(() => {
+    getClubData();
+  }, [club_id]);
   return (
     <div className="mt-6 flex flex-col justify-center items-center w-full  gap-4">
       <div className=" flex gap-4 p-4 justify-center min-h-96 w-full">
@@ -14,13 +86,13 @@ export default function Athlete() {
             <div className="flex items-center gap-2">
               {/* name */}
               <div className="font-Russo font-extrabold text-xl tracking-wider text-yellow-500">
-                John Doe
+                {clubName}
               </div>
               <div className="border-2 border-yellow-500 w-52 h-0"></div>
             </div>
             {/* player type */}
             <div className="font-Russo font-extrabold text-lg tracking-wider text-slate-800">
-              Football Player
+              {clubType}
             </div>
 
             {/* profile image */}
@@ -59,17 +131,12 @@ export default function Athlete() {
           {isEdit ? (
             <div className="flex flex-col gap-4 mt-8">
               <div>
-                <div>First Name</div>
+                <div>Club Name</div>
                 <input
                   type="text"
                   className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
-                />
-              </div>
-              <div>
-                <div>Last Name</div>
-                <input
-                  type="text"
-                  className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
+                  onChange={(e) => setClubName(e.target.value)}
+                  value={clubName}
                 />
               </div>
               <div>
@@ -77,36 +144,53 @@ export default function Athlete() {
                 <input
                   type="email"
                   className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
+                  value={email}
+                  editable={false}
                 />
               </div>
               <div>
-                <div>About Me</div>
+                <div>Description</div>
                 <textarea
                   type="text"
                   className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
                   maxLength={1000}
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description}
                 />
               </div>
               <div>
-                <div>Profession</div>
+                <div>Club Type</div>
                 <input
                   type="text"
                   className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
+                  onChange={(e) => setClubType(e.target.value)}
+                  value={clubType}
                 />
               </div>
               <div>
-                <div>Interests</div>
+                <div>Achivements</div>
                 <input
                   type="text"
                   className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
+                  onChange={(e) => setAchivements(e.target.value)}
+                  value={achivements}
                 />
               </div>
 
               <div className="w-full flex justify-center items-center  gap-4 py-4">
-                <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-60 cursor-pointer">
+                <button
+                  className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-60 cursor-pointer"
+                  onClick={storeClubData}
+                >
                   Save Details
                 </button>
-                <button className="bg-red-500 rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-60 cursor-pointer">
+                <button
+                  className="bg-red-500 rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-60 cursor-pointer"
+                  onClick={async () => {
+                    setIsEdit(false);
+                    await getClubData();
+                  }}
+                >
                   Cancel
                 </button>
               </div>
@@ -114,55 +198,41 @@ export default function Athlete() {
           ) : (
             <div className="flex flex-col gap-4 mt-8">
               <div>
-                <div className="font-bold">First Name</div>
+                <div className="font-bold">Club Name</div>
                 <div className=" text-md tracking-wider text-slate-700">
-                  John{" "}
+                  {clubName}
                 </div>
               </div>
-              <div>
-                <div className="font-bold">Last Name</div>
-                <div className=" text-md tracking-wider text-slate-700">
-                  Doe{" "}
-                </div>
-              </div>
+
               <div>
                 <div className="font-bold">Email</div>
                 <div className=" text-md tracking-wider text-slate-700">
-                  johndoe@gmail.com
+                  fcbarcelona@gmail.com
                 </div>
               </div>
               <div>
-                <div className="font-bold">About Me</div>
+                <div className="font-bold">Description</div>
                 <div className=" text-md tracking-wider text-slate-700">
-                  In the world of football, John Doe emerges as a dynamic force,
-                  blending athleticism, skill, and unwavering determination.
-                  From the early days of honing their craft on the streets to
-                  gracing the grandest stages of the sport, John Doe embodies
-                  versatility and technical prowess. Whether orchestrating plays
-                  in midfield, surging forward with blistering pace, or
-                  marshaling the defense with stoic resolve, their adaptability
-                  sets them apart. With a keen eye for goal and an innate
-                  leadership ability, John Doe inspires teammates and strikes
-                  fear into opponents, leaving an indelible mark on every match
-                  they grace.
+                  {description}
                 </div>
               </div>
               <div>
-                <div className="font-bold">Profession</div>
+                <div className="font-bold">Club Type</div>
                 <div className=" text-md tracking-wider text-slate-700">
-                  Football Player
+                  {clubType}
                 </div>
               </div>
               <div>
-                <div className="font-bold">Interests</div>
+                <div className="font-bold">Achivements</div>
                 <div className="text-md tracking-wider text-slate-700">
-                  Football, Tennis, Basketball
+                  {achivements}
                 </div>
               </div>
             </div>
           )}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

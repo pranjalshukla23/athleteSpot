@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 export default function Club() {
   const [email, setEmail] = useState("");
@@ -28,9 +29,13 @@ export default function Club() {
           clubData
         );
 
+        // {sub: 'fcmadrid@gmail.com', club_name: 'FC Madrid', club_id: 2, role: 'club', exp: 1713906041}
+
         if ("token" in data) {
           localStorage.setItem("token", data.token);
-          localStorage.setItem("user_role", "club");
+          const token = data.token;
+          const user = jwtDecode(token);
+          console.log("decoded", user);
           router.push("/dashboard/club");
         }
       }

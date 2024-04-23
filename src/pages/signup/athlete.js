@@ -47,7 +47,6 @@ export default function Athlete() {
 
         if ("token" in data) {
           localStorage.setItem("token", data.token);
-          localStorage.setItem("user_role", "athlete");
           router.push("/dashboard/athlete");
         }
       }
@@ -91,6 +90,7 @@ export default function Athlete() {
                 type="email"
                 className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
                 onChange={(e) => setEmail(e.target.value)}
+                value={email}
               />
             </div>
             <div>
@@ -99,6 +99,7 @@ export default function Athlete() {
                 type="password"
                 className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
                 onChange={(e) => setPassword(e.target.value)}
+                value={password}
               />
             </div>
             <div>
@@ -107,6 +108,7 @@ export default function Athlete() {
                 type="password"
                 className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                value={confirmPassword}
               />
             </div>
             <div className="w-full flex flex-col  justify-center items-center  gap-4 py-4">

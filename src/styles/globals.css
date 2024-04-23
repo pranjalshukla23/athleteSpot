@@ -4,12 +4,12 @@
 
 @font-face {
   font-family: Poppins;
-  src: url("/fonts/Poppins-Regular.ttf");
+  src: url("../../public/assets/fonts/poppins.ttf");
 }
 
 @font-face {
   font-family: RussoOne;
-  src: url("/fonts/RussoOne-Regular.ttf");
+  src: url("../../public/assets/fonts/russoOne.ttf");
 }
 
 :root {

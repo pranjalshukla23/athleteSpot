@@ -13,8 +13,8 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       fontFamily: {
-      
-       "Russo": ["Russo One", "sans-serif"],
+       "Russo": ["RussoOne", "sans-serif"],
+       "Poppins": ["Poppins", "sans-serif"],
       },
      
     },

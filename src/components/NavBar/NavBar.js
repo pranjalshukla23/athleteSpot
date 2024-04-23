@@ -31,7 +31,7 @@ export default function NavBar() {
           onClick={() => {
             const role = localStorage.getItem("user_role");
             console.log(role);
-            router.push("/profile/athlete");
+            router.push(`/profile/${role === "athlete" ? "athlete" : "club"}`);
           }}
         >
           <FaRegUser />

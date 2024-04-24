@@ -1,12 +1,56 @@
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "postcss";
 import { useState } from "react";
 import { IoFootball } from "react-icons/io5";
 import { MdOutlineCancel } from "react-icons/md";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Club() {
   const [showTrialPopup, setShowTrialPopup] = useState(false);
+  const [clubName, setClubName] = useState("");
+  const [trialName, setTrialName] = useState("");
+  const [sports, setSports] = useState("");
+  const [date, setDate] = useState("");
+  const createTrial = async () => {
+    try {
+      if (clubName === "" || trialName === "" || sports === "" || date === "") {
+        console.log("error");
+        toast.error("Please fill all the fields", {
+          position: "top-right",
+        });
+      } else {
+        const clubToken = localStorage.getItem("token");
+        const club = jwtDecode(clubToken);
+        const trialData = {
+          trial_name: trialName,
+          sports: sports,
+          trial_date: date,
+          club_id: club.club_id.toString(),
+        };
+
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/new/trial`,
+          trialData
+        );
+
+        toast.success("Trial created successfully", {
+          position: "top-right",
+        });
+
+        showTrialPopup(false);
+      }
+    } catch (err) {
+      toast.error(err.message, {
+        position: "top-right",
+      });
+    }
+  };
+
+  
   return (
     <div className=" relative">
       {showTrialPopup && (
@@ -33,6 +77,8 @@ export default function Club() {
                     <input
                       type="text"
                       className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
+                      onChange={(e) => setClubName(e.target.value)}
+                      value={clubName}
                     />
                   </div>
                   <div>
@@ -40,6 +86,8 @@ export default function Club() {
                     <input
                       type="text"
                       className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
+                      onChange={(e) => setTrialName(e.target.value)}
+                      value={trialName}
                     />
                   </div>
                   <div>
@@ -47,6 +95,8 @@ export default function Club() {
                     <input
                       type="text"
                       className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
+                      onChange={(e) => setSports(e.target.value)}
+                      value={sports}
                     />
                   </div>
                   <div>
@@ -54,10 +104,15 @@ export default function Club() {
                     <input
                       type="date"
                       className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
+                      onChange={(e) => setDate(e.target.value)}
+                      value={date}
                     />
                   </div>
                   <div className="w-full flex flex-col  justify-center items-center  gap-4 py-4">
-                    <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-60 cursor-pointer">
+                    <button
+                      className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-60 cursor-pointer"
+                      onClick={createTrial}
+                    >
                       Post
                     </button>
                   </div>
@@ -176,6 +231,7 @@ export default function Club() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

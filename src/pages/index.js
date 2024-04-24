@@ -5,7 +5,6 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div>
-     
       <div className="w-full h-96 flex p-4 mb-12">
         {/* text section */}
         <div className="w-1/2 h-full  flex flex-col justify-center items-center">
@@ -21,12 +20,16 @@ export default function Home() {
 
           {/* CTAS */}
           <div className=" flex gap-8 items-center mt-8">
-            <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500">
-              Become a Talent
-            </button>
-            <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500">
-              Become a Recruiter
-            </button>
+            <Link href="/signup/athlete">
+              <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500">
+                Become a Talent
+              </button>
+            </Link>
+            <Link href="/signup/club">
+              <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500">
+                Become a Recruiter
+              </button>
+            </Link>
           </div>
         </div>
         {/* video section */}

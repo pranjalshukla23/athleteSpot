@@ -1,162 +1,142 @@
+import axios from "axios";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { IoFootball } from "react-icons/io5";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Athlete() {
+  const [trialPosts, setTrialPosts] = useState([]);
+  const [appliedTrials, setApplieTrials] = useState([]);
+  function convertDateFormat(dateString) {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    // Split the date string into year, month, and day
+    const [year, monthIndex, day] = dateString.split("-");
+
+    // Create a Date object
+    const date = new Date(year, monthIndex - 1, day);
+
+    // Get the month name from the months array
+    const monthName = months[date.getMonth()];
+
+    // Format the date in "Month Date" format
+    const formattedDate = `${monthName} ${day}`;
+
+    return formattedDate;
+  }
+  const getTrialsPost = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/trials`
+      );
+      if (data.length > 0) {
+        const trialsArr = data.map((trial) => ({
+          clubName: trial.club_name,
+          trialName: trial.trial_name,
+          sports: trial.sports,
+          trialDate: convertDateFormat(trial.trial_date),
+        }));
+        setTrialPosts(trialsArr);
+      }
+
+      console.log("data", data);
+    } catch (err) {
+      console.log("error is", err);
+      toast.error(err.message, {
+        position: "top-right",
+      });
+    }
+  };
+
+  // const applyTrial = async (trialId) => {
+  //   try {
+  //     const athleteToken = localStorage.getItem("token");
+  //     const athlete = jwtDecode(athleteToken);
+  //     const { data } = await axios.post(
+  //       `${
+  //         process.env.NEXT_PUBLIC_BACKEND_URL
+  //       }/apply/${athlete.athlete_id.toString()}`,
+  //       trialData
+  //     );
+  //     const appliedTrialsArr = trialPosts.filter((t) => t.trialId === trialId);
+  //     toast.success("You have applied to trial successfully", {
+  //       position: "top-right",
+  //     });
+  //   } catch (err) {
+  //     toast.error(err.message, {
+  //       position: "top-right",
+  //     });
+  //   }
+  // };
+
+  useEffect(() => {
+    getTrialsPost();
+  }, []);
+
   return (
     <div>
       <div className="flex gap-8 p-4 flex-wrap w-full pl-12 justify-start items-center">
         <div className="font-Russo font-extrabold text-xl tracking-wider text-yellow-500">
-         Top Picks For Trials
+          Top Picks For Trials
         </div>
         <div className="border-2 border-yellow-500 w-96 h-0"></div>
       </div>
       <div className="flex gap-8 p-4 flex-wrap w-full justify-center items-center">
-        {/* 1st */}
-        <div className=" p-12 w-1/3 h-5/6 bg-slate-50 shadow-xl">
-          <div className="flex items-center gap-2"></div>
-          <div className="flex flex-col gap-6">
-            <div className="flex gap-4">
-              <IoFootball className="w-20 h-20" />
-              <div className="flex flex-col gap-1 justify-start items-start w-1/4">
-                <div className="font-Russo font-medium text-2xl tracking-wider text-gray-800">
-                  May
-                </div>
-                <div className="font-Russo font-extrabold text-4xl tracking-wider text-gray-800">
-                  4
+        {trialPosts.map((trial, index) => (
+          <div
+            className={`p-12 w-1/3 h-5/6 ${
+              index % 2 === 0 ? "bg-slate-50" : "bg-purple-50"
+            } shadow-xl`}
+          >
+            <div className="flex items-center gap-2"></div>
+            <div className="flex flex-col gap-6">
+              <div className="flex gap-4">
+                <IoFootball className="w-20 h-20" />
+                <div className="flex flex-col gap-1 justify-start items-start w-1/4">
+                  <div className="font-Russo font-extrabold text-4xl tracking-wider text-gray-800">
+                    {trial.trialDate}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="w-full flex flex-col gap-2">
-              <div className="font-russo font-extrabold text-3xl text-gray-800 w-full">
-                Football Trial Barcelona
-              </div>
-              <div>
-                <div className="font-medium text-xl text-gray-600 w-full">
-                  15:00 - 17:00
+              <div className="w-full flex flex-col gap-2">
+                <div className="font-russo font-extrabold text-3xl text-gray-800 w-full">
+                  {trial.trialName}
                 </div>
-                <div className="font-medium text-xl text-gray-600 w-full">
-                  Football
+                <div>
+                  <div className="font-medium text-xl text-gray-600 w-full">
+                    {trial.clubName}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <Link href="/athletes/info">
-              <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-40 cursor-pointer">
+              <button
+                className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-40 cursor-pointer"
+                onClick={() => {
+                  // applyTrial(trial.id);
+                }}
+              >
                 Apply
               </button>
-            </Link>
+            </div>
           </div>
-        </div>
-        {/* 2nd */}
-        <div className=" p-12 w-1/3 h-5/6 bg-purple-50 shadow-xl">
-          <div className="flex items-center gap-2"></div>
-          <div className="flex flex-col gap-6">
-            <div className="flex gap-4">
-              <IoFootball className="w-20 h-20" />
-              <div className="flex flex-col gap-1 justify-start items-start w-1/4">
-                <div className="font-Russo font-medium text-2xl tracking-wider text-gray-800">
-                  June
-                </div>
-                <div className="font-Russo font-extrabold text-4xl tracking-wider text-gray-800">
-                  10
-                </div>
-              </div>
-            </div>
-            <div className="w-full flex flex-col gap-2">
-              <div className="font-russo font-extrabold text-3xl text-gray-800 w-full">
-                Tennis Trial Barcelona
-              </div>
-              <div>
-                <div className="font-medium  text-xl text-gray-600 w-full">
-                  15:00 - 17:00
-                </div>
-                <div className="font-medium  text-xl text-gray-600 w-full">
-                  Tennis
-                </div>
-              </div>
-            </div>
-
-            <Link href="/athletes/info">
-              <button className="bg-orange-500 rounded-full px-3 py-2 text-md font-bold text-white hover:bg-black w-40 cursor-pointer">
-                Apply
-              </button>
-            </Link>
-          </div>
-        </div>
-        {/* 3rd */}
-        <div className=" p-12 w-1/3 h-5/6 bg-slate-50 shadow-xl">
-          <div className="flex items-center gap-2"></div>
-          <div className="flex flex-col gap-6">
-            <div className="flex gap-4">
-              <IoFootball className="w-20 h-20" />
-              <div className="flex flex-col gap-1 justify-start items-start w-1/4">
-                <div className="font-Russo font-medium text-2xl tracking-wider text-gray-800">
-                  June
-                </div>
-                <div className="font-Russo font-extrabold text-4xl tracking-wider text-gray-800">
-                  15
-                </div>
-              </div>
-            </div>
-            <div className="w-full flex flex-col gap-2">
-              <div className="font-russo font-extrabold text-3xl text-gray-800 w-full">
-                Basketball Trial Barcelona
-              </div>
-              <div>
-                <div className="font-medium  text-xl text-gray-600 w-full">
-                  15:00 - 17:00
-                </div>
-                <div className="font-medium  text-xl text-gray-600 w-full">
-                  Basketball
-                </div>
-              </div>
-            </div>
-
-            <Link href="/athletes/info">
-              <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-40 cursor-pointer">
-                Apply
-              </button>
-            </Link>
-          </div>
-        </div>
-        {/* 4th */}
-        <div className=" p-12 w-1/3 h-5/6 bg-purple-50 shadow-xl">
-          <div className="flex items-center gap-2"></div>
-          <div className="flex flex-col gap-6">
-            <div className="flex gap-4">
-              <IoFootball className="w-20 h-20" />
-              <div className="flex flex-col gap-1 justify-start items-start w-1/4">
-                <div className="font-Russo font-medium text-2xl tracking-wider text-gray-800">
-                  July
-                </div>
-                <div className="font-Russo font-extrabold text-4xl tracking-wider text-gray-800">
-                  16
-                </div>
-              </div>
-            </div>
-            <div className="w-full flex flex-col gap-2">
-              <div className="font-russo font-extrabold text-3xl text-gray-800 w-full">
-                Swimming Trial Barcelona
-              </div>
-              <div>
-                <div className="font-medium  text-xl text-gray-600 w-full">
-                  15:00 - 17:00
-                </div>
-                <div className="font-medium  text-xl text-gray-600 w-full">
-                  Swimming
-                </div>
-              </div>
-            </div>
-
-            <Link href="/athletes/info">
-              <button className="bg-orange-500 rounded-full px-3 py-2 text-md font-bold text-white hover:bg-black w-40 cursor-pointer">
-                Apply
-              </button>
-            </Link>
-          </div>
-        </div>
+        ))}
       </div>
+      <ToastContainer />
     </div>
   );
 }

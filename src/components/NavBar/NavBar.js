@@ -7,12 +7,20 @@ import { jwtDecode } from "jwt-decode";
 
 export default function NavBar() {
   const router = useRouter();
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     console.log("here...");
     const token = localStorage.getItem("token");
     setIsLoggedIn(token != null);
   }, []);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    router.replace("/");
+  };
+
   return (
     <nav className=" bg-black-800 px-4 flex justify-between items-center border-b-2 border-b-gray-100">
       <div className=" flex gap-8 items-center font-Russo text-slate-700  text-xl font-extrabold">
@@ -27,20 +35,28 @@ export default function NavBar() {
         </div>
       </div>
       {isLoggedIn ? (
-        <div
-          className="rounded-full w-8 h-8 border-2 border-black flex justify-center items-center cursor-pointer hover:bg-slate-200"
-          onClick={() => {
-            const token = localStorage.getItem("token");
-            const user = jwtDecode(token);
-            console.log("decoded", user);
-            router.push(
-              `/profile/${user.role}/${
-                user.role === "club" ? user.club_id : user.athlete_id
-              }`
-            );
-          }}
-        >
-          <FaRegUser />
+        <div className="flex gap-4 items-center">
+          <div
+            className="rounded-full w-8 h-8 border-2 border-black flex justify-center items-center cursor-pointer hover:bg-slate-200"
+            onClick={() => {
+              const token = localStorage.getItem("token");
+              const user = jwtDecode(token);
+              console.log("decoded", user);
+              router.push(
+                `/profile/${user.role}/${
+                  user.role === "club" ? user.club_id : user.athlete_id
+                }`
+              );
+            }}
+          >
+            <FaRegUser />
+          </div>
+          <div
+            className="font-bold p-2 px-4 bg-black text-white rounded-full cursor-pointer hover:bg-orange-500"
+            onClick={logout}
+          >
+            Logout
+          </div>
         </div>
       ) : (
         <div className=" flex gap-8 items-center">

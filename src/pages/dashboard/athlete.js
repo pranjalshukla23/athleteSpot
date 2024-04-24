@@ -51,7 +51,7 @@ export default function Athlete() {
           clubType: club.club_type,
           description: club.description,
           achievements:
-            club.achievements.length > 0 ? club.achievements.join(" ") : "",
+            club.achievements.length > 0 ? club.achievements.join(",") : "--",
         }));
         setClubs(clubsArr);
       }

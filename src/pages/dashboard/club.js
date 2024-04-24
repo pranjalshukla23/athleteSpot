@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "postcss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoFootball } from "react-icons/io5";
 import { MdOutlineCancel } from "react-icons/md";
 import { toast, ToastContainer } from "react-toastify";
@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function Club() {
   const [showTrialPopup, setShowTrialPopup] = useState(false);
+  const [athletes, setAthletes] = useState([]);
   const [clubName, setClubName] = useState("");
   const [trialName, setTrialName] = useState("");
   const [sports, setSports] = useState("");
@@ -50,7 +51,35 @@ export default function Club() {
     }
   };
 
-  
+  const getAthletes = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/athletes`
+      );
+      if (data.length > 0) {
+        const athletesArr = data.map((athlete) => ({
+          athleteName: `${athlete.first_name} ${athlete.last_name}`,
+          description: athlete.description ? athlete.description : "--",
+          profession: athlete.profession ? athlete.profession : "--",
+          interests: athletes.interests ? athlete.interests.join(",") : "--",
+        }));
+        console.log("athletes arr", athletesArr);
+        setAthletes(athletesArr);
+      }
+
+      console.log("data", data);
+    } catch (err) {
+      console.log("error is", err);
+      toast.error(err.message, {
+        position: "top-right",
+      });
+    }
+  };
+
+  useEffect(() => {
+    getAthletes();
+  }, []);
+
   return (
     <div className=" relative">
       {showTrialPopup && (
@@ -159,76 +188,52 @@ export default function Club() {
           <div className="border-2 border-yellow-500 w-96 h-0"></div>
         </div>
         <div className="flex gap-8 p-4 flex-wrap w-full justify-center items-center">
-          {/* 1st */}
-          <div className=" p-12 w-1/3 h-[26rem] bg-slate-50 shadow-xl">
-            <div className="h-2/3 relative ">
-              <Image
-                src="/images/athlete1.jpg"
-                alt="Football"
-                fill={true}
-                style={{
-                  objectFit: "cover",
-                  overflow: "hidden",
-                }}
-              />
-            </div>
-            <div className="flex flex-col gap-1 mt-2">
-              <div className="w-full flex flex-col gap-1">
-                <div className="font-russo font-extrabold text-xl text-gray-800 w-full">
-                  John Doe
-                </div>
-                <div>
-                  <div className="font-medium text-lg text-gray-600 w-full">
-                    Age: 25 years
-                  </div>
-                  <div className="font-medium text-lg text-gray-600 w-full">
-                    Football Player
-                  </div>
-                </div>
+          {athletes.map((athlete, index) => (
+            <div
+              key={index}
+              className={`p-12 w-1/3 h-[30rem] ${
+                index % 2 === 0 ? "bg-slate-50" : "bg-purple-50"
+              } shadow-xl`}
+            >
+              <div className="h-2/3 relative ">
+                <Image
+                  src="/images/athlete1.jpg"
+                  alt="Football"
+                  fill={true}
+                  style={{
+                    objectFit: "cover",
+                    overflow: "hidden",
+                  }}
+                />
               </div>
+              <div className="flex flex-col gap-1 mt-2">
+                <div className="w-full flex flex-col gap-1">
+                  <div className="font-russo font-extrabold text-xl text-gray-800 w-full">
+                    {athlete.athleteName}
+                  </div>
+                  <div>
+                    <div className="font-medium text-lg text-gray-600 w-full">
+                      {athlete.profession}
+                    </div>
+                  </div>
+                  <div className="h-6 truncate  overflow-hidden">
+                    <div className="font-medium italic text-sm text-gray-600 w-full truncate">
+                      {athlete.description}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="font-medium text-lg text-gray-600 w-full">
+                      {athlete.interests}
+                    </div>
+                  </div>
+                </div>
 
-              <Link href="/athletes/info">
                 <button className="bg-black rounded-full px-3 py-2 text-sm font-bold text-white hover:bg-orange-500 w-40 cursor-pointer">
                   Connect
                 </button>
-              </Link>
-            </div>
-          </div>
-          {/* 2nd */}
-          <div className=" p-12 w-1/3 h-[26rem] bg-purple-50 shadow-xl">
-            <div className="h-2/3 relative ">
-              <Image
-                src="/images/athlete1.jpg"
-                alt="Football"
-                fill={true}
-                style={{
-                  objectFit: "cover",
-                  overflow: "hidden",
-                }}
-              />
-            </div>
-            <div className="flex flex-col gap-1 mt-2">
-              <div className="w-full flex flex-col gap-1">
-                <div className="font-russo font-extrabold text-xl text-gray-800 w-full">
-                  John Doe
-                </div>
-                <div>
-                  <div className="font-medium text-lg text-gray-600 w-full">
-                    Age: 25 years
-                  </div>
-                  <div className="font-medium text-lg text-gray-600 w-full">
-                    Football Player
-                  </div>
-                </div>
               </div>
-
-              <Link href="/athletes/info">
-                <button className="bg-black rounded-full px-3 py-2 text-sm font-bold text-white hover:bg-orange-500 w-40 cursor-pointer">
-                  Connect
-                </button>
-              </Link>
             </div>
-          </div>
+          ))}
         </div>
       </div>
       <ToastContainer />

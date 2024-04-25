@@ -1,4 +1,5 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { IoFootball } from "react-icons/io5";
@@ -8,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default function Athlete() {
   const [clubs, setClubs] = useState([]);
   const [trialPosts, setTrialPosts] = useState([]);
-  const [appliedTrials, setApplieTrials] = useState([]);
+  const [appliedTrials, setAppliedTrials] = useState([]);
   function convertDateFormat(dateString) {
     const months = [
       "January",
@@ -69,6 +70,7 @@ export default function Athlete() {
       );
       if (data.length > 0) {
         const trialsArr = data.map((trial) => ({
+          trialId: trial.trial_id,
           clubName: trial.club_name,
           trialName: trial.trial_name,
           sports: trial.sports,
@@ -76,8 +78,6 @@ export default function Athlete() {
         }));
         setTrialPosts(trialsArr);
       }
-
-      console.log("data", data);
     } catch (err) {
       console.log("error is", err);
       toast.error(err.message, {
@@ -86,26 +86,35 @@ export default function Athlete() {
     }
   };
 
-  // const applyTrial = async (trialId) => {
-  //   try {
-  //     const athleteToken = localStorage.getItem("token");
-  //     const athlete = jwtDecode(athleteToken);
-  //     const { data } = await axios.post(
-  //       `${
-  //         process.env.NEXT_PUBLIC_BACKEND_URL
-  //       }/apply/${athlete.athlete_id.toString()}`,
-  //       trialData
-  //     );
-  //     const appliedTrialsArr = trialPosts.filter((t) => t.trialId === trialId);
-  //     toast.success("You have applied to trial successfully", {
-  //       position: "top-right",
-  //     });
-  //   } catch (err) {
-  //     toast.error(err.message, {
-  //       position: "top-right",
-  //     });
-  //   }
-  // };
+  const applyTrial = async (trialId) => {
+    try {
+      console.log("trial posts", trialPosts);
+      console.log("trialId", trialId);
+      const athleteToken = localStorage.getItem("token");
+      const athlete = jwtDecode(athleteToken);
+      const trialData = {
+        athlete_id: athlete.athlete_id,
+      };
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/apply/${trialId.toString()}`,
+        trialData
+      );
+      const appliedTrialsArr = trialPosts.filter((t) => t.trialId === trialId);
+      setAppliedTrials(appliedTrialsArr);
+      toast.success("You have applied to trial successfully", {
+        position: "top-right",
+      });
+    } catch (err) {
+      toast.error(err.message, {
+        position: "top-right",
+      });
+    }
+  };
+
+  const isAppliedTrial = (trialId) => {
+    const appliedTrialsArr = appliedTrials.filter((t) => t.trialId === trialId);
+    return appliedTrialsArr.length > 0;
+  };
 
   useEffect(() => {
     getClubs();
@@ -198,15 +207,20 @@ export default function Athlete() {
                     </div>
                   </div>
                 </div>
-
-                <button
-                  className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-40 cursor-pointer"
-                  onClick={() => {
-                    // applyTrial(trial.id);
-                  }}
-                >
-                  Apply
-                </button>
+                {isAppliedTrial(trial.trialId) ? (
+                  <div className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-40 disabled text-center">
+                    Applied
+                  </div>
+                ) : (
+                  <button
+                    className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-40 cursor-pointer"
+                    onClick={() => {
+                      applyTrial(trial.trialId);
+                    }}
+                  >
+                    Apply
+                  </button>
+                )}
               </div>
             </div>
           ))}

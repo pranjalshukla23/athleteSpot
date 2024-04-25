@@ -5,9 +5,9 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div>
-      <div className="w-full h-96 flex p-4 mb-12">
+      <div className="w-full h-96 flex p-4 mb-12 gap-4">
         {/* text section */}
-        <div className="w-1/2 h-full  flex flex-col justify-center items-center">
+        <div className="w-1/2 h-full flex flex-col justify-center items-center">
           <Image src="/images/logo.png" width={300} height={200} alt="logo" />
           {/* text */}
           <div className="font-Russo text-xl text-gray-500 flex">

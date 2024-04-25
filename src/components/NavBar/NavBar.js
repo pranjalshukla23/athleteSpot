@@ -7,17 +7,21 @@ import { jwtDecode } from "jwt-decode";
 
 export default function NavBar() {
   const router = useRouter();
+  const [userRole, setUserRole] = useState("");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     console.log("here...");
     const token = localStorage.getItem("token");
     setIsLoggedIn(token != null);
+    const t = jwtDecode(token);
+    setUserRole(t.role);
   }, []);
 
   const logout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    setUserRole("");
     router.replace("/");
   };
 
@@ -51,6 +55,12 @@ export default function NavBar() {
           >
             <FaRegUser />
           </div>
+          <Link href={`/dashboard/${userRole}`}>
+            <div className="font-bold p-2 px-4 bg-black text-white rounded-full cursor-pointer hover:bg-orange-500">
+              Dashboard
+            </div>
+          </Link>
+
           <div
             className="font-bold p-2 px-4 bg-black text-white rounded-full cursor-pointer hover:bg-orange-500"
             onClick={logout}

@@ -210,7 +210,7 @@ export default function Athlete() {
           <div className="flex items-center w-1/2 h-20 p-2 bg-slate-50 shadow-xl gap-2">
             <div className="w-3/4 border-2 border-slate-200 bg-white rounded-md px-2 py-2">
               <input
-                placeholder="start your sports trial"
+                placeholder="Upload your career highlights"
                 className="w-full  focus:outline-none focus:ring-0"
                 onFocus={() => setShowTrialPopup(true)}
               />
@@ -278,7 +278,7 @@ export default function Athlete() {
 
                 <div className="w-full flex flex-col gap-2">
                   <div>
-                    <div className="font-medium text-lg text-gray-600 w-full">
+                    <div className="font-medium text-lg  text-gray-600 w-full">
                       {club.description}
                     </div>
                   </div>

@@ -13,9 +13,12 @@ export default function NavBar() {
   useEffect(() => {
     console.log("here...");
     const token = localStorage.getItem("token");
+
+    if (token) {
+      const t = jwtDecode(token);
+      setUserRole(t.role);
+    }
     setIsLoggedIn(token != null);
-    const t = jwtDecode(token);
-    setUserRole(t.role);
   }, []);
 
   const logout = () => {

@@ -5,11 +5,16 @@ import { useEffect, useState } from "react";
 import { IoFootball } from "react-icons/io5";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { MdOutlineCancel } from "react-icons/md";
 
 export default function Athlete() {
   const [clubs, setClubs] = useState([]);
+  const [uploadedVideos, setUploadedVideos] = useState([]);
+  const [showTrialPopup, setShowTrialPopup] = useState(false);
   const [trialPosts, setTrialPosts] = useState([]);
   const [appliedTrials, setAppliedTrials] = useState([]);
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState("");
+  const [selectedVideo, setSelectedVideo] = useState(null);
   function convertDateFormat(dateString) {
     const months = [
       "January",
@@ -116,6 +121,24 @@ export default function Athlete() {
     return appliedTrialsArr.length > 0;
   };
 
+  const handleVideoChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedVideo(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      console.log(reader.result);
+      setUploadedVideoUrl(reader.result);
+      const newVideos = [...uploadedVideos];
+      setUploadedVideos([...newVideos, reader.result]);
+    };
+    reader.readAsDataURL(file);
+
+    setShowTrialPopup(false);
+    setUploadedVideoUrl("");
+    setSelectedVideo(null);
+  };
+
   useEffect(() => {
     getClubs();
     getTrialsPost();
@@ -123,6 +146,106 @@ export default function Athlete() {
 
   return (
     <div>
+      {showTrialPopup && (
+        <div className="absolute left-0 right-0 top-0 bottom-0 flex justify-center items-start p-4 bg-slate-100 opacity-100 z-30 ">
+          <div className="mt-6 flex flex-col justify-center items-center w-full gap-4">
+            {/* <Image src="/images/logo.png" width={200} height={200} alt="logo" /> */}
+            <div className=" flex gap-4 p-4 justify-center min-h-96 w-full">
+              <div className="bg-slate-50 shadow-xl p-6 w-3/4 relative">
+                <div className="absolute right-4">
+                  <MdOutlineCancel
+                    className="w-10 h-10 cursor-pointer"
+                    onClick={() => setShowTrialPopup(false)}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="font-Russo font-extrabold text-xl tracking-wider text-yellow-500">
+                    Career Highlights
+                  </div>
+                  <div className="border-2 border-yellow-500 w-60 h-0"></div>
+                </div>
+                <div className="flex flex-col gap-4 mt-8">
+                  <div>
+                    <div className="my-2 font-bold text-lg">Upload Videos</div>
+
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoChange}
+                    />
+                    {uploadedVideoUrl && (
+                      <div>
+                        <p>Uploaded Video:</p>
+                        <video controls>
+                          <source
+                            src={uploadedVideoUrl}
+                            type={selectedVideo.type}
+                          />
+                          Your browser does not support the video tag.
+                        </video>
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-full flex flex-col  justify-center items-center  gap-4 py-4">
+                    <button className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-60 cursor-pointer">
+                      Post
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div>
+        <div className="flex gap-8 p-4 flex-wrap w-full pl-12 justify-start items-center">
+          <div className="font-Russo font-extrabold text-xl tracking-wider text-yellow-500">
+            Create a post
+          </div>
+          <div className="border-2 border-yellow-500 w-96 h-0"></div>
+        </div>
+        <div className="flex gap-8 p-4 flex-wrap w-full justify-center items-center ">
+          {/* 1st */}
+          <div className="flex items-center w-1/2 h-20 p-2 bg-slate-50 shadow-xl gap-2">
+            <div className="w-3/4 border-2 border-slate-200 bg-white rounded-md px-2 py-2">
+              <input
+                placeholder="start your sports trial"
+                className="w-full  focus:outline-none focus:ring-0"
+                onFocus={() => setShowTrialPopup(true)}
+              />
+            </div>
+            <button
+              className="bg-black rounded-full px-3 py-2 text-md font-bold text-white hover:bg-orange-500 w-40 cursor-pointer"
+              onClick={() => setShowTrialPopup(true)}
+            >
+              Post
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* Feeds */}
+      <div>
+        <div className="flex gap-8 p-4 flex-wrap w-full pl-12 justify-start items-center">
+          <div className="font-Russo font-extrabold text-xl tracking-wider text-yellow-500">
+            Career Highlights Feeds
+          </div>
+          <div className="border-2 border-yellow-500 w-96 h-0"></div>
+        </div>
+        <div className="flex gap-8 p-4 pl-12 flex-wrap w-full justify-start items-center ">
+          {uploadedVideos.map((video, index) => (
+            <video
+              controls
+              key={index}
+              autoPlay
+              className="h-52 w-50 border-4 border-slate-300 shadow-lg rounded-md"
+            >
+              <source src={video} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          ))}
+        </div>
+      </div>
       {/* clubs */}
       <div>
         <div className="flex gap-8 p-4 flex-wrap w-full pl-12 justify-start items-center">
@@ -147,7 +270,7 @@ export default function Athlete() {
                     <div className="font-Russo font-extrabold text-4xl tracking-wider text-gray-800">
                       {club.clubName}
                     </div>
-                    <div className="font-russo font-extrabold text-lg text-gray-800 w-full">
+                    <div className="font-russo font-extrabold text-md text-gray-800 w-full">
                       {club.clubType}
                     </div>
                   </div>
@@ -155,7 +278,7 @@ export default function Athlete() {
 
                 <div className="w-full flex flex-col gap-2">
                   <div>
-                    <div className="font-medium text-xl text-gray-600 w-full">
+                    <div className="font-medium text-lg text-gray-600 w-full">
                       {club.description}
                     </div>
                   </div>

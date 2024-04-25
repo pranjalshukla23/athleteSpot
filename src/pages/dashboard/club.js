@@ -42,7 +42,7 @@ export default function Club() {
           position: "top-right",
         });
 
-        showTrialPopup(false);
+        setShowTrialPopup(false);
       }
     } catch (err) {
       toast.error(err.message, {

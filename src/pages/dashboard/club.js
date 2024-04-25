@@ -81,9 +81,9 @@ export default function Club() {
   }, []);
 
   return (
-    <div className=" relative">
+    <div className="relative">
       {showTrialPopup && (
-        <div className="absolute left-0 right-0 top-0 bottom-0 flex justify-center items-center p-4 bg-slate-100 opacity-100 z-30">
+        <div className="absolute left-0 right-0 top-0 bottom-0 flex justify-center items-start p-4 bg-slate-100 opacity-100 z-30 ">
           <div className="mt-6 flex flex-col justify-center items-center w-full gap-4">
             {/* <Image src="/images/logo.png" width={200} height={200} alt="logo" /> */}
             <div className=" flex gap-4 p-4 justify-center min-h-96 w-full">

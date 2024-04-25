@@ -56,8 +56,9 @@ export default function Club() {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/athletes`
       );
-      if (data.length > 0) {
+      if (data && data.length > 0) {
         const athletesArr = data.map((athlete) => ({
+          athlete_id: athlete.athlete_id.toString(),
           athleteName: `${athlete.first_name} ${athlete.last_name}`,
           description: athlete.description ? athlete.description : "--",
           profession: athlete.profession ? athlete.profession : "--",
@@ -101,15 +102,6 @@ export default function Club() {
                   <div className="border-2 border-yellow-500 w-60 h-0"></div>
                 </div>
                 <div className="flex flex-col gap-4 mt-8">
-                  <div>
-                    <div>Club Name</div>
-                    <input
-                      type="text"
-                      className="border-2 border-slate-300 w-full px-2 py-1 rounded-md"
-                      onChange={(e) => setClubName(e.target.value)}
-                      value={clubName}
-                    />
-                  </div>
                   <div>
                     <div>Trial Name</div>
                     <input
@@ -191,7 +183,7 @@ export default function Club() {
           {athletes.map((athlete, index) => (
             <div
               key={index}
-              className={`p-12 w-1/3 h-[30rem] ${
+              className={`p-12 w-1/3 h-[32rem] ${
                 index % 2 === 0 ? "bg-slate-50" : "bg-purple-50"
               } shadow-xl`}
             >
@@ -228,9 +220,12 @@ export default function Club() {
                   </div>
                 </div>
 
-                <button className="bg-black rounded-full px-3 py-2 text-sm font-bold text-white hover:bg-orange-500 w-40 cursor-pointer">
-                  Connect
-                </button>
+                <Link
+                  className="bg-black rounded-full px-3 py-2  text-center text-md font-bold text-white hover:bg-orange-500 w-40 cursor-pointer"
+                  href={`/profile/athlete/${athlete.athlete_id}`}
+                >
+                  View Profile
+                </Link>
               </div>
             </div>
           ))}

@@ -43,7 +43,8 @@ export default function Club() {
 
         if ("token" in data) {
           localStorage.setItem("token", data.token);
-          router.push("/dashboard/club");
+          const user = jwtDecode(data.token);
+          router.push(`/profile/athlete/${user.club_id}`);
         }
       }
     } catch (err) {

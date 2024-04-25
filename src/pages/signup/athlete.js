@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 export default function Athlete() {
   const [firstName, setFirstName] = useState("");
@@ -47,7 +48,8 @@ export default function Athlete() {
 
         if ("token" in data) {
           localStorage.setItem("token", data.token);
-          router.push("/dashboard/athlete");
+          const user = jwtDecode(data.token);
+          router.push(`/profile/athlete/${user.athlete_id}`);
         }
       }
     } catch (err) {

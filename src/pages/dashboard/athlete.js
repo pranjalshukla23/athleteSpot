@@ -51,13 +51,16 @@ export default function Athlete() {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/clubs`
       );
-      if (data.length > 0) {
+      if (data && data.length > 0) {
         const clubsArr = data.map((club) => ({
+          club_id: club.club_id.toString(),
           clubName: club.club_name,
           clubType: club.club_type,
           description: club.description,
           achievements:
-            club.achievements.length > 0 ? club.achievements.join(",") : "--",
+            club.achievements && club.achievements.length > 0
+              ? club.achievements.join(",")
+              : "--",
         }));
         setClubs(clubsArr);
       }
@@ -73,7 +76,7 @@ export default function Athlete() {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/trials`
       );
-      if (data.length > 0) {
+      if (data && data.length > 0) {
         const trialsArr = data.map((trial) => ({
           trialId: trial.trial_id,
           clubName: trial.club_name,
@@ -288,6 +291,12 @@ export default function Athlete() {
                     </div>
                   </div>
                 </div>
+                <Link
+                  className="bg-black rounded-full px-3 py-2  text-center text-md font-bold text-white hover:bg-orange-500 w-40 cursor-pointer"
+                  href={`/profile/club/${club.club_id}`}
+                >
+                  View Profile
+                </Link>
               </div>
             </div>
           ))}

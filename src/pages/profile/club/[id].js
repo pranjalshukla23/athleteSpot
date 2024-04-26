@@ -70,8 +70,11 @@ export default function Club() {
   const storeClubData = async () => {
     try {
       if (club_id) {
+        const clubToken = localStorage.getItem("token");
+        const user = jwtDecode(clubToken);
+        console.log("club is", user);
         const formData = new FormData();
-        formData.append("club_id", club_id.toString());
+        formData.append("club_id", club_id);
         formData.append("club_name", clubName);
         formData.append("club_type", clubType);
         formData.append("description", description);
@@ -102,7 +105,7 @@ export default function Club() {
     const user = jwtDecode(athleteToken);
 
     console.log("user is", user);
-    console.log("club id", club_id)
+    console.log("club id", club_id);
 
     if (
       user.hasOwnProperty("club_id") &&

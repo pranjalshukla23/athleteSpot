@@ -18,7 +18,7 @@ export default function Club() {
   const [date, setDate] = useState("");
   const createTrial = async () => {
     try {
-      if (clubName === "" || trialName === "" || sports === "" || date === "") {
+      if (trialName === "" || sports === "" || date === "") {
         console.log("error");
         toast.error("Please fill all the fields", {
           position: "top-right",

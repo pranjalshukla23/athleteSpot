@@ -261,11 +261,11 @@ export default function Athlete() {
           </div>
           <div className="border-2 border-yellow-500 w-96 h-0"></div>
         </div>
-        <div className="flex gap-8 p-4 flex-wrap w-full justify-center items-center">
+        <div className="flex gap-4 p-4 flex-wrap w-full justify-center items-center">
           {clubs.map((club, index) => (
             <div
               key={index}
-              className={`p-12 w-1/3 h-96 ${
+              className={`p-12 w-1/3 h-[45rem] ${
                 index % 2 === 0 ? "bg-slate-50" : "bg-purple-50"
               } shadow-xl`}
             >
@@ -281,10 +281,10 @@ export default function Athlete() {
               </div>
               <div className="flex items-center gap-2"></div>
               <div className="flex flex-col gap-3">
-                <div className="flex gap-4">
+                <div className="flex gap-2">
                   {/* <IoFootball className="w-20 h-20" /> */}
                   <div className="flex flex-col gap-1 justify-start items-start w-1/4">
-                    <div className="font-Russo font-extrabold text-4xl tracking-wider text-gray-800">
+                    <div className="font-Russo font-extrabold text-2xl tracking-wider text-gray-800">
                       {club.clubName}
                     </div>
                     <div className="font-russo font-extrabold text-md text-gray-800 w-full">
@@ -295,7 +295,7 @@ export default function Athlete() {
 
                 <div className="w-full flex flex-col gap-2">
                   <div>
-                    <div className="font-medium text-lg  text-gray-600 w-full">
+                    <div className="font-medium text-lg h-12 overflow-hidden  text-gray-600 w-full">
                       {club.description}
                     </div>
                   </div>

@@ -73,7 +73,7 @@ export default function Athlete() {
     try {
       if (athlete_id) {
         const formData = new FormData();
-        formData.append("athlete_id", athlete_id.toString());
+        formData.append("athlete_id", athlete_id);
         formData.append("first_name", firstName);
         formData.append("last_name", lastName);
         formData.append("description", description);
@@ -106,9 +106,13 @@ export default function Athlete() {
     const athleteToken = localStorage.getItem("token");
     const user = jwtDecode(athleteToken);
 
-    console.log("user", user, athlete_id)
+    console.log("user", user, athlete_id);
 
-    if (user.hasOwnProperty("athlete_id") && athlete_id.toString() === user.athlete_id.toString() && user.role === "athlete") {
+    if (
+      user.hasOwnProperty("athlete_id") &&
+      athlete_id === user.athlete_id.toString() &&
+      user.role === "athlete"
+    ) {
       setShowEditIcon(false);
     } else {
       setShowEditIcon(true);

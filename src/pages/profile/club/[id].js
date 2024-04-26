@@ -109,7 +109,7 @@ export default function Club() {
 
     if (
       user.hasOwnProperty("club_id") &&
-      club_id.toString() === user.club_id.toString() &&
+      club_id === user.club_id.toString() &&
       user.role === "club"
     ) {
       setShowEditIcon(false);

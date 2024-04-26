@@ -102,9 +102,10 @@ export default function Club() {
     const user = jwtDecode(athleteToken);
 
     console.log("user is", user);
+    console.log("club id", club_id)
 
     if (
-      user.hasOwnProperty("club__id") &&
+      user.hasOwnProperty("club_id") &&
       club_id.toString() === user.club_id.toString() &&
       user.role === "club"
     ) {

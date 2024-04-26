@@ -58,6 +58,9 @@ export default function Club() {
       );
       if (data && data.length > 0) {
         const athletesArr = data.map((athlete) => ({
+          athlete_image: athlete.profile_image
+            ? `data:image/jpeg;base64,${athlete.profile_image}`
+            : "/images/athlete1.jpg",
           athlete_id: athlete.athlete_id.toString(),
           athleteName: `${athlete.first_name} ${athlete.last_name}`,
           description: athlete.description ? athlete.description : "--",
@@ -189,7 +192,7 @@ export default function Club() {
             >
               <div className="h-2/3 relative ">
                 <Image
-                  src="/images/athlete1.jpg"
+                  src={athlete.athlete_image}
                   alt="Football"
                   fill={true}
                   style={{

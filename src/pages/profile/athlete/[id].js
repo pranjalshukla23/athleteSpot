@@ -42,8 +42,9 @@ export default function Athlete() {
           setProfession(data.profession ? data.profession : "--");
           setInterests(data.interests ? data.interests : "--");
           setEmail(user.sub);
-          if (data.profle_image) {
+          if (data.profile_image) {
             setPreviewImage(`data:image/jpeg;base64,${data.profile_image}`);
+        
           }
         }
       }

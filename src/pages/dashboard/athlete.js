@@ -6,6 +6,7 @@ import { IoFootball } from "react-icons/io5";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MdOutlineCancel } from "react-icons/md";
+import Image from "next/image";
 
 export default function Athlete() {
   const [clubs, setClubs] = useState([]);
@@ -54,6 +55,9 @@ export default function Athlete() {
       if (data && data.length > 0) {
         const clubsArr = data.map((club) => ({
           club_id: club.club_id.toString(),
+          profile_image: club.profile_image
+            ? `data:image/jpeg;base64,${club.profile_image}`
+            : "/images/club.jpg",
           clubName: club.club_name,
           clubType: club.club_type,
           description: club.description,
@@ -261,10 +265,20 @@ export default function Athlete() {
           {clubs.map((club, index) => (
             <div
               key={index}
-              className={`p-12 w-1/3 h-5/6 ${
+              className={`p-12 w-1/3 h-96 ${
                 index % 2 === 0 ? "bg-slate-50" : "bg-purple-50"
               } shadow-xl`}
             >
+              <div className="h-2/3 w-full relative">
+                <Image
+                  src={club.profile_image}
+                  alt="Football"
+                  fill={true}
+                  style={{
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
               <div className="flex items-center gap-2"></div>
               <div className="flex flex-col gap-3">
                 <div className="flex gap-4">
